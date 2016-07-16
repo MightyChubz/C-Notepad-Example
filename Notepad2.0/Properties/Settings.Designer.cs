@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Notepad2._0.Properties
+namespace Notepad._0.Properties
 {
 
 

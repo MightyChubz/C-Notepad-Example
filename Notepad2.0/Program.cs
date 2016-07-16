@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Notepad2._0
+namespace Notepad._0
 {
     static class Program
     {

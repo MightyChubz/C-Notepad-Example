@@ -2,8 +2,8 @@ C:\Learning Test Projects\Notepad\Notepad2.0\bin\Debug\Notepad2.0.exe.config
 C:\Learning Test Projects\Notepad\Notepad2.0\bin\Debug\Notepad2.0.exe
 C:\Learning Test Projects\Notepad\Notepad2.0\bin\Debug\Notepad2.0.pdb
 C:\Learning Test Projects\Notepad\Notepad2.0\obj\Debug\Notepad2.0.csprojResolveAssemblyReference.cache
-C:\Learning Test Projects\Notepad\Notepad2.0\obj\Debug\Notepad2._0.Window.resources
 C:\Learning Test Projects\Notepad\Notepad2.0\obj\Debug\Notepad2._0.Properties.Resources.resources
 C:\Learning Test Projects\Notepad\Notepad2.0\obj\Debug\Notepad2.0.csproj.GenerateResource.Cache
 C:\Learning Test Projects\Notepad\Notepad2.0\obj\Debug\Notepad2.0.exe
 C:\Learning Test Projects\Notepad\Notepad2.0\obj\Debug\Notepad2.0.pdb
+C:\Learning Test Projects\Notepad\Notepad2.0\obj\Debug\Notepad._0.Window.resources
