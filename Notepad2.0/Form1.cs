@@ -45,7 +45,8 @@ namespace Notepad._0
         // When the save menu strip item is pressed.
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var textBox = (RichTextBox) TabControl.SelectedTab.Controls[0];
+            if (TabControl.SelectedTab == null) return;
+            var textBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
 
             if (!SaveDictionary.ContainsKey(TabControl.SelectedTab.Text))
             {
@@ -70,10 +71,11 @@ namespace Notepad._0
             }
             else
             {
-                textBox.SaveFile(SaveDictionary[TabControl.SelectedTab.Text], Path.GetExtension(SaveFileDialog.FileName) == ".rtf"
+                textBox.SaveFile(SaveDictionary[TabControl.SelectedTab.Text],
+                    Path.GetExtension(SaveDictionary[TabControl.SelectedTab.Text]) == ".rtf"
                     ? RichTextBoxStreamType.RichText
                     : RichTextBoxStreamType.PlainText);
-                
+
                 SaveDictionary[TabControl.SelectedTab.Text] = SaveFileDialog.FileName;
             }
         }
@@ -81,13 +83,14 @@ namespace Notepad._0
         // When the save menu strip item is pressed.
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
+            var textBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
+
             if (SaveFileDialog.ShowDialog() != DialogResult.OK)
             {
                 SaveFileDialog.Dispose();
                 return;
             }
-
-            var textBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
 
             // Changes the tabs title to that filname without extension and then saves the file.
             TabControl.SelectedTab.Text = Path.GetFileNameWithoutExtension(SaveFileDialog.FileName);
@@ -114,12 +117,15 @@ namespace Notepad._0
 
             CreateTab();
 
-            var stream = new StreamReader(new FileStream(OpenFileDialog.FileName, FileMode.Open));
+            if (!SaveDictionary.ContainsKey(Path.GetFileNameWithoutExtension(OpenFileDialog.FileName)))
+                SaveDictionary.Add(TabControl.SelectedTab.Text, OpenFileDialog.FileName);
+            else
+                SaveDictionary[TabControl.SelectedTab.Text] = OpenFileDialog.FileName;
 
             if (TabControl.SelectedTab != null)
             {
                 var textBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
-                textBox.Text = stream.ReadToEnd();
+                textBox.LoadFile(OpenFileDialog.FileName);
             }
 
             OpenFileDialog.Dispose();
@@ -152,6 +158,7 @@ namespace Notepad._0
         // When the close menu strip item is pressed.
         private void CloseToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
             TabControl.TabPages.Remove(TabControl.SelectedTab);
         }
 
@@ -164,6 +171,7 @@ namespace Notepad._0
         // When the undo menu strip item is pressed.
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
             var richTextBox = (RichTextBox) TabControl.SelectedTab.Controls[0];
             richTextBox.Undo();
         }
@@ -171,6 +179,7 @@ namespace Notepad._0
         // When the redo menu strip item is pressed.
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
             var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
             richTextBox.Redo();
         }
@@ -178,6 +187,7 @@ namespace Notepad._0
         // When the cut menu strip item is pressed.
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
             var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
             richTextBox.Cut();
         }
@@ -185,6 +195,7 @@ namespace Notepad._0
         // When the copy menu strip item is pressed.
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
             var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
             richTextBox.Copy();
         }
@@ -192,6 +203,7 @@ namespace Notepad._0
         // When the paste menu strip item is pressed.
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
             var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
             richTextBox.Paste();
         }
@@ -199,6 +211,7 @@ namespace Notepad._0
         // When the delete menu strip item is pressed.
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
             var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
             var remove = richTextBox.SelectedText.Remove(0, richTextBox.SelectedText.Length);
             richTextBox.SelectedText = remove;
@@ -207,6 +220,7 @@ namespace Notepad._0
         // When the select menu strip item is pressed.
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
             var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
             richTextBox.SelectAll();
         }
@@ -214,6 +228,7 @@ namespace Notepad._0
         // When the word wrap menu strip item is pressed.
         private void wordWrapToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
             var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
             richTextBox.WordWrap = !richTextBox.WordWrap;
         }
@@ -221,6 +236,7 @@ namespace Notepad._0
         // When the font menu strip item is pressed.
         private void fontToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
             var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
             if (FontDialog.ShowDialog() != DialogResult.OK)
             {
@@ -228,7 +244,10 @@ namespace Notepad._0
                 return;
             }
 
-            richTextBox.Font = FontDialog.Font;
+            if (richTextBox.SelectionLength > 0)
+                richTextBox.SelectionFont = FontDialog.Font;
+            else
+                richTextBox.Font = FontDialog.Font;
 
             FontDialog.Dispose();
         }
@@ -236,6 +255,7 @@ namespace Notepad._0
         // When the font color menu strip item is pressed.
         private void fontColorToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (TabControl.SelectedTab == null) return;
             var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
             if (FontColorDialog.ShowDialog() != DialogResult.OK)
             {
@@ -243,8 +263,63 @@ namespace Notepad._0
                 return;
             }
 
-            richTextBox.ForeColor = FontColorDialog.Color;
+            if (richTextBox.SelectionLength > 0)
+                richTextBox.SelectionColor = FontColorDialog.Color;
+            else
+                richTextBox.ForeColor = FontColorDialog.Color;
+
             FontColorDialog.Dispose();
+        }
+
+        private void fontBackgroundColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TabControl.SelectedTab == null) return;
+            var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
+            if (FontColorDialog.ShowDialog() != DialogResult.OK)
+            {
+                FontColorDialog.Dispose();
+                return;
+            }
+
+            richTextBox.SelectionBackColor = FontDialog.Color;
+
+            FontColorDialog.Dispose();
+        }
+
+        private void selectionBackgroundColorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TabControl.SelectedTab == null) return;
+            var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
+            if (FontColorDialog.ShowDialog() != DialogResult.OK)
+            {
+                FontColorDialog.Dispose();
+                return;
+            }
+
+            richTextBox.BackColor = FontColorDialog.Color;
+
+            FontColorDialog.Dispose();
+        }
+
+        private void leftToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TabControl.SelectedTab == null) return;
+            var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
+            richTextBox.SelectionAlignment = HorizontalAlignment.Left;
+        }
+
+        private void centerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TabControl.SelectedTab == null) return;
+            var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
+            richTextBox.SelectionAlignment = HorizontalAlignment.Center;
+        }
+
+        private void rightToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (TabControl.SelectedTab == null) return;
+            var richTextBox = (RichTextBox)TabControl.SelectedTab.Controls[0];
+            richTextBox.SelectionAlignment = HorizontalAlignment.Right;
         }
     }
 }
